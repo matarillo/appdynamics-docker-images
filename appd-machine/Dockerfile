@@ -10,8 +10,7 @@ RUN echo "${APPD_AGENT_SHA256} *MachineAgent-${APPD_AGENT_VERSION}.zip" >> appd_
     && rm appd_checksum \
     && mkdir /tmp/unzip \
     && apt update \
-    && apt upgrade -y \
-    && apt install -y unzip \
+    && apt install -y --no-install-recommends unzip \
     && unzip -oq MachineAgent-${APPD_AGENT_VERSION}.zip -d /tmp/unzip
 
 
@@ -19,7 +18,9 @@ FROM openjdk:8u242-jre-slim
 ENV DEBCONF_NOWARNINGS yes
 RUN apt update \
     && apt upgrade -y \
-    && apt install -y iproute2 procps sysstat dumb-init bash coreutils
+    && apt install -y --no-install-recommends iproute2 procps sysstat dumb-init bash coreutils \
+    && apt -y clean \
+    && rm -rf /var/lib/apt/lists/*
 
 COPY --from=builder /tmp/unzip /opt/appdynamics
 
