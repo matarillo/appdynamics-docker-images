@@ -8,6 +8,9 @@ RUN echo "${APPD_AGENT_SHA256} *MachineAgent-${APPD_AGENT_VERSION}.zip" >> appd_
     && sha256sum -c appd_checksum \
     && rm appd_checksum \
     && mkdir /tmp/unzip \
+    && apt update \
+    && apt upgrade -y \
+    && apt install -y unzip \
     && unzip -oq MachineAgent-${APPD_AGENT_VERSION}.zip -d /tmp/unzip
 
 
