@@ -2,6 +2,7 @@ FROM openjdk:8u242-jre-slim AS builder
 
 ARG APPD_AGENT_VERSION
 ARG APPD_AGENT_SHA256
+ENV DEBCONF_NOWARNINGS yes
 
 COPY MachineAgent-${APPD_AGENT_VERSION}.zip /
 RUN echo "${APPD_AGENT_SHA256} *MachineAgent-${APPD_AGENT_VERSION}.zip" >> appd_checksum \
@@ -15,6 +16,7 @@ RUN echo "${APPD_AGENT_SHA256} *MachineAgent-${APPD_AGENT_VERSION}.zip" >> appd_
 
 
 FROM openjdk:8u242-jre-slim
+ENV DEBCONF_NOWARNINGS yes
 RUN apt update \
     && apt upgrade -y \
     && apt install -y iproute2 procps sysstat dumb-init bash coreutils
