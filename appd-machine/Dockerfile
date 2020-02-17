@@ -1,4 +1,4 @@
-FROM openjdk:8u151-jre-alpine3.7 AS builder
+FROM openjdk:8u242-jre-slim AS builder
 
 ARG APPD_AGENT_VERSION
 ARG APPD_AGENT_SHA256
@@ -11,8 +11,11 @@ RUN echo "${APPD_AGENT_SHA256} *MachineAgent-${APPD_AGENT_VERSION}.zip" >> appd_
     && unzip -oq MachineAgent-${APPD_AGENT_VERSION}.zip -d /tmp/unzip
 
 
-FROM openjdk:8u151-jre-alpine3.7
-RUN apk add --no-cache iproute2 procps sysstat dumb-init bash coreutils
+FROM openjdk:8u242-jre-slim
+RUN apt update \
+    && apt upgrade -y \
+    && apt install -y iproute2 procps sysstat dumb-init bash coreutils
+
 COPY --from=builder /tmp/unzip /opt/appdynamics
 
 ENTRYPOINT ["/usr/bin/dumb-init"]
